@@ -21,7 +21,7 @@ fn main() {
         
 
 
-        match game.Try(&guess_word) {
+        match game.play(&guess_word) {
             Ok(isSuccess) => {
                 if isSuccess{
                     println!("good success");
@@ -29,7 +29,7 @@ fn main() {
 
                 }
                 else {
-                    println!("rest round : {}" , game.get_rest_round());
+                    println!("round : {} / {}" , game.get_rest_round(), maxRound);
                 }
             },
             Err(errMsg) => {
