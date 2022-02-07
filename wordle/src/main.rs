@@ -6,7 +6,6 @@ use std::io;
 fn main() {
     println!("Hello, world!");
 
-
     let maxRound = 10;       
     let word= String::from("Hello");
     let mut game = Game::new(word, maxRound);
