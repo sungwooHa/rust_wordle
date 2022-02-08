@@ -46,10 +46,8 @@ impl Log{
         for ch in &self.state {
             print!("{} ", ch.print_state());
         }
-        println!();
     }
 }
-
 
 pub struct Game{
     word : String,
@@ -71,12 +69,6 @@ impl Game{
             return Err(MSG_WRONG_LENGTH);
         }
         
-        //ANSWER.
-        if self.IsAnswer(guess_word) {
-            println!("{}", MSG_GOOD_GAME);
-            return Ok(true);
-        }
-
         //"COLLECT" check.
         let wordle = match self.CheckCollect(guess_word){
             Some(wordle) => wordle,
@@ -96,6 +88,12 @@ impl Game{
         let log = Log::new(guess_word, wordle);
         log.print_log();
         self.game_log.push(log);
+
+        //ANSWER.
+        if self.IsAnswer(guess_word) {
+            println!("{}", MSG_GOOD_GAME);
+            return Ok(true);
+        }        
 
         if self.game_log.len() as u32 >= self.max_round {
             //fail
@@ -182,4 +180,14 @@ impl Game{
     pub fn GetAnswer(&self) -> &str{
         return &self.word;
     }
+}
+
+
+mod Loader
+{
+    pub fn get_word(){
+
+    }
+
+    
 }
