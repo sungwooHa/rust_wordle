@@ -28,7 +28,6 @@ impl State{
     }
 }
 
-
 struct Log{
     guess_word : String,
     state : Vec<State>,
@@ -180,14 +179,4 @@ impl Game{
     pub fn GetAnswer(&self) -> &str{
         return &self.word;
     }
-}
-
-
-mod Loader
-{
-    pub fn get_word(){
-
-    }
-
-    
 }
