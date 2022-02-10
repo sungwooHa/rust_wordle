@@ -1,8 +1,8 @@
-use std::{collections::HashMap, hash::Hash};
+use std::{collections::HashMap};
 
-const COLLECT_simbol : &str = "■";
-const HAVE_simbol : &str = "▨";
-const WRONG_simbol : &str = "□";
+const COLLECT_SIMBOL : &str = "■";
+const HAVE_SIMBOL : &str = "▨";
+const WRONG_SIMBOL : &str = "□";
 
 static MSG_GOOD_GAME : &'static str =  "nice, good job";
 static MSG_WRONG_LENGTH : &'static str =  "wrong word, different length";
@@ -21,9 +21,9 @@ enum State{
 impl State{
     pub fn print_state(&self) -> &str{
         match self{
-            State::COLLECT => COLLECT_simbol,
-            State::HAVE => HAVE_simbol,
-            State::WRONG => WRONG_simbol,
+            State::COLLECT => COLLECT_SIMBOL,
+            State::HAVE => HAVE_SIMBOL,
+            State::WRONG => WRONG_SIMBOL,
         }
     }
 }
@@ -45,6 +45,7 @@ impl Log{
         for ch in &self.state {
             print!("{} ", ch.print_state());
         }
+        println!("");
     }
 }
 
@@ -64,12 +65,12 @@ impl Game{
     }
 
     pub fn play(&mut self, guess_word : &String) -> Result<bool, &str> {
-        if self.Verify(guess_word) == false {
+        if self.verify(guess_word) == false {
             return Err(MSG_WRONG_LENGTH);
         }
         
         //"COLLECT" check.
-        let wordle = match self.CheckCollect(guess_word){
+        let wordle = match self.check_collect(guess_word){
             Some(wordle) => wordle,
             None => {
                 panic!("{}", MSG_WRONG);
@@ -77,7 +78,7 @@ impl Game{
         };
 
         //"HAVE" check
-        let wordle = match self.CheckHave(guess_word, wordle){
+        let wordle = match self.check_have(guess_word, wordle){
             Some(v) => v,
             None => {
                 panic!("{}", MSG_WRONG);
@@ -89,7 +90,7 @@ impl Game{
         self.game_log.push(log);
 
         //ANSWER.
-        if self.IsAnswer(guess_word) {
+        if self.is_answer(guess_word) {
             println!("{}", MSG_GOOD_GAME);
             return Ok(true);
         }        
@@ -104,7 +105,7 @@ impl Game{
         }
     }
 
-    fn Verify(&self, guess_word : &String ) -> bool {
+    fn verify(&self, guess_word : &String ) -> bool {
         self.word.len() == guess_word.len()
     }
 
@@ -112,37 +113,35 @@ impl Game{
         self.max_round - self.game_log.len() as u32
     }
 
-    fn IsAnswer(&self, guess_word : &String) -> bool {
-        let word = self.word.to_uppercase();
-        let guessWord = guess_word.to_uppercase();
-        println!("");
-        word == guessWord
+    fn is_answer(&self, guess_word : &String) -> bool {
+        self.word.eq_ignore_ascii_case(&guess_word)
     }
     
-    fn CheckCollect(&self, guess_word : &String) -> Option<Vec<State>>{
+    fn check_collect(&self, guess_word : &String) -> Option<Vec<State>>{
         if self.word.is_empty() || guess_word.is_empty(){
             return None;
         }
 
-        let charWord : Vec<char> = self.word.to_uppercase().chars().collect();
-        let guessWord : Vec<char> = guess_word.to_uppercase().chars().collect();
+        let char_word : Vec<char> = self.word.chars().collect();
+        let guess_word : Vec<char> = guess_word.chars().collect();
         
         let mut wordle : Vec<State> = Vec::new();
 
-        for idx in 0..charWord.len(){
-            let mut state : State;
-            if charWord[idx] == guessWord[idx] {
-                state = State::COLLECT;
-            }else{
-                state = State::WRONG;
-            }
+        for idx in 0..char_word.len() {
+            let state= if char_word[idx].eq_ignore_ascii_case(&guess_word[idx]) {
+                State::COLLECT
+            } else
+            {
+                State::WRONG
+            };
+            
             wordle.push(state);
         }
         
         Some(wordle)
     }
 
-    fn CheckHave(&self, guess_word : &String, wordle_collect_only : Vec<State>) -> Option<Vec<State>>{
+    fn check_have(&self, guess_word : &String, wordle_collect_only : Vec<State>) -> Option<Vec<State>>{
         
         let mut word_map : HashMap<char, u32> = HashMap::new();
         let mut idx = 0;
@@ -176,7 +175,7 @@ impl Game{
         Some(wordle)
     }
 
-    pub fn GetAnswer(&self) -> &str{
+    pub fn get_answer(&self) -> &str{
         return &self.word;
     }
 }
