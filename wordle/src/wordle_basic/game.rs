@@ -1,5 +1,7 @@
 use std::{collections::HashMap};
 
+use super::log::Log;
+
 const COLLECT_SIMBOL : &str = "■";
 const HAVE_SIMBOL : &str = "▨";
 const WRONG_SIMBOL : &str = "□";
@@ -11,48 +13,9 @@ static MSG_NO_CHANCE : &'static str = "FAIL. you don't have any chance";
 //static MSG_STRIKE_IS : &'static str =  "strike : ";
 //static MSG_BALL_IS : &'static str =  "ball : ";
 
-#[derive(PartialEq, Clone)]
-enum State{
-    COLLECT,
-    HAVE,
-    WRONG,
-}
-
-impl State{
-    pub fn print_state(&self) -> &str{
-        match self{
-            State::COLLECT => COLLECT_SIMBOL,
-            State::HAVE => HAVE_SIMBOL,
-            State::WRONG => WRONG_SIMBOL,
-        }
-    }
-}
-
-struct Log{
-    #[allow(dead_code)]
-    guess_word : String,
-    state : Vec<State>,
-}
-
-impl Log{
-    pub fn new(guess_word : &str, state : Vec<State> ) -> Log{
-        Log{
-            guess_word : String::from(guess_word),
-            state : state,
-        }
-    }
-
-    pub fn print_log(&self){
-        for ch in &self.state {
-            print!("{} ", ch.print_state());
-        }
-        println!("");
-    }
-}
-
 pub struct Game{
     word : String,
-    game_log : Vec<Log>,
+    history : Vec<Log>,
     max_round : u32,
 }
 
@@ -61,7 +24,7 @@ impl Game{
         Game{
             word,
             max_round : round,
-            game_log : Vec::new()
+            history : Vec::new()
         }
     }
 
@@ -88,7 +51,7 @@ impl Game{
 
         let log = Log::new(guess_word, wordle);
         log.print_log();
-        self.game_log.push(log);
+        self.history.push(log);
 
         //ANSWER.
         if self.is_answer(guess_word) {
@@ -96,7 +59,7 @@ impl Game{
             return Ok(true);
         }        
 
-        if self.game_log.len() as u32 >= self.max_round {
+        if self.history.len() as u32 >= self.max_round {
             //fail
             return Err(MSG_NO_CHANCE);
         } 
@@ -111,7 +74,7 @@ impl Game{
     }
 
     pub fn get_rest_round(&self) -> u32 {
-        self.max_round - self.game_log.len() as u32
+        self.max_round - self.history.len() as u32
     }
 
     fn is_answer(&self, guess_word : &String) -> bool {

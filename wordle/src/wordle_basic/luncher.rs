@@ -75,7 +75,6 @@ pub mod runner{
 
         //loader를 이용해보고싶은데..?
         let word = String::from("Hello");
-        
         Some(word)
     }
 
