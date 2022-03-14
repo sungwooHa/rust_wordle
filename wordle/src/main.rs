@@ -1,6 +1,6 @@
 mod wordle_basic;
-use wordle_basic::luncher::Runner;
+use wordle_basic::luncher::runner;
 
 fn main() {
-    Runner::run();
+    runner::run();
 }

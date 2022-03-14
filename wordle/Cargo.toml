@@ -6,4 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rust-ini = "0.17.0"
+rust-ini = "0.18.0"
+sqlx = { version = "0.5", features = [ "runtime-async-std-native-tls" ] }

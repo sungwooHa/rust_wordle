@@ -1,7 +1,7 @@
 
 use super::game;
 
-pub mod Runner{
+pub mod runner{
     use std::io::Write;
 
     pub fn run(){
@@ -38,8 +38,8 @@ pub mod Runner{
                 };
         
                 match game.play(&guess_word) {
-                    Ok(isSuccess) => {
-                        if isSuccess{
+                    Ok(is_success) => {
+                        if is_success{
                             break;
         
                         }
@@ -47,8 +47,8 @@ pub mod Runner{
                             println!("round : {} / {}" , game.get_rest_round(), round);
                         }
                     },
-                    Err(errMsg) => {
-                        println!("{}", errMsg); 
+                    Err(err_msg) => {
+                        println!("{}", err_msg); 
                     }
                 }
                 println!("--- next round ---");
