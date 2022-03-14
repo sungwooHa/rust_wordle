@@ -46,6 +46,7 @@ impl Log{
         for ch in &self.state {
             print!("{} ", ch.print_state());
         }
+        println!("");
     }
 }
 
@@ -114,10 +115,7 @@ impl Game{
     }
 
     fn is_answer(&self, guess_word : &String) -> bool {
-        let word = self.word.to_uppercase();
-        let guess_word = guess_word.to_uppercase();
-        println!("");
-        word == guess_word
+        self.word.eq_ignore_ascii_case(&guess_word)
     }
     
     fn check_collect(&self, guess_word : &String) -> Option<Vec<State>>{
@@ -125,18 +123,19 @@ impl Game{
             return None;
         }
 
-        let char_word : Vec<char> = self.word.to_uppercase().chars().collect();
-        let guess_word : Vec<char> = guess_word.to_uppercase().chars().collect();
+        let char_word : Vec<char> = self.word.chars().collect();
+        let guess_word : Vec<char> = guess_word.chars().collect();
         
         let mut wordle : Vec<State> = Vec::new();
 
-        for idx in 0..char_word.len(){
-            let state : State;
-            if char_word[idx] == guess_word[idx] {
-                state = State::COLLECT;
-            }else{
-                state = State::WRONG;
-            }
+        for idx in 0..char_word.len() {
+            let state= if char_word[idx].eq_ignore_ascii_case(&guess_word[idx]) {
+                State::COLLECT
+            } else
+            {
+                State::WRONG
+            };
+            
             wordle.push(state);
         }
         
