@@ -1,49 +1,33 @@
 
 
-static MAX_ROUND : u6 = 6;
-
-pub trait luncher{
-    pub fn run(&game : Game) {}
+trait Luncher {
+    type GameObject;
+    fn start_game(&mut self) -> Self::GameObject;
 }
 
-pub trait Game{
-    pub fn new() -> Game {} 
-    pub fn play(&self) -> Result<bool, &str> {}
-    pub fn is_over(&self) -> Result<bool, &str> {}
+struct WordleFactory{
+    today_word : String
 }
 
-pub struct Wordle{
-    word : String,
-    history : Vec<Log>,
-}
-
-impl Wordle{
-    fn get_rest_count(&self) -> u32 {
-        MAX_COUNT - self.history.size()
-    }
-
-    fn is_answer(&self, guess_word : &String) -> bool {
-        self.word.eq_ignore_ascii_case(&guess_word)
-    }
-
-    fn check_alphabet(&self, guess_word : &String) -> Option<Vec<State>>{
-
-    }
-}
-
-impl Game for Wordle{
-    fn new() -> Game {
-        Game{
-            word,
-            history : Vec::new()
+impl WordleFactory{
+    fn new() -> WordleFactory {
+        WordleFactory {
+            today_word : get_today_word().unwrap(),
         }
     }
 
-    fn play(&self) -> Result<bool, &str> {
-
+    fn get_today_word() -> Result<String, &str> {
+        let today_word = String::from("Hello");
+        Ok(today_word);
     }
 
-    fn is_over(&self) -> Result<bool, &str> {
+}
 
+impl Luncher for WordleFactory{
+    type GameObject = Wordle;
+    fn start_game(&mut self) -> Self::GameOBject{
+        Wordle::new(today_word);
+
+        while Wordle.play() {};
     }
 }
